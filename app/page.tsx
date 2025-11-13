@@ -8,17 +8,17 @@ import { generateRandomColor } from '../utils/colors';
 
 const nodes = [
   { href: '/flow', label: 'Flow', ring: 'cyan' },
-  { href: '/practice', label: 'Practice', ring: 'amber' },
-  { href: '/museum', label: 'Archive', ring: 'green' },
-  { href: '/market', label: 'Market Sense', ring: 'cyan' },
-  { href: '/marketing', label: 'Sharing', ring: 'amber' },
-  { href: '/community', label: 'Community', ring: 'green' },
-  { href: '/funding', label: 'Funding', ring: 'cyan' },
-  { href: '/wellbeing', label: 'Wellbeing', ring: 'amber' },
-  { href: '/obstacles', label: 'Obstacles', ring: 'cyan' },
-  { href: '/techniques', label: 'Techniques', ring: 'green' },
-  { href: '/arthistory', label: 'Art & History', ring: 'amber' },
-  { href: '/solitude', label: 'Solitude', ring: 'cyan' }
+  { href: '/practice', label: 'Practice', ring: 'emerald' },
+  { href: '/museum', label: 'Archive', ring: 'gold' },
+  { href: '/wellbeing', label: 'Inner Studio', ring: 'rose' },
+  { href: '/market', label: 'Market', ring: 'cyan' },
+  { href: '/marketing', label: 'Sharing', ring: 'gold' },
+  { href: '/community', label: 'Community', ring: 'emerald' },
+  { href: '/codex', label: 'Creative Codex', ring: 'rose' },
+  { href: '/codex/funding', label: 'Funding', ring: 'cyan' },
+  { href: '/codex/art-history', label: 'Art & History', ring: 'gold' },
+  { href: '/codex/ai-creation', label: 'AI & Creation', ring: 'emerald' },
+  { href: '/codex/isolation', label: 'Solitude', ring: 'rose' }
 ];
 
 function pick(seed: number, arr: string[]) {
@@ -36,68 +36,80 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="grid md:grid-cols-[1.2fr_1fr] gap-8">
-      {/* Left: Constellation */}
+    <div className="grid md:grid-cols-[1.4fr_1fr] gap-8 items-stretch">
+      {/* Constellation */}
       <section className="card relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+        >
           <motion.div
-            className="absolute rounded-full border border-cyan-400/30"
-            style={{ width: 260, height: 260, top: '10%', left: '8%' }}
+            className="absolute rounded-full border border-cyan-400/25"
+            style={{ width: 260, height: 260, top: '6%', left: '6%' }}
             animate={{ rotate: [0, 360] }}
-            transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 48, repeat: Infinity, ease: 'linear' }}
           />
           <motion.div
-            className="absolute rounded-full border border-amber-300/25"
-            style={{ width: 340, height: 340, top: '32%', left: '28%' }}
+            className="absolute rounded-full border border-amber-300/20"
+            style={{ width: 360, height: 360, top: '28%', left: '24%' }}
             animate={{ rotate: [360, 0] }}
-            transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 62, repeat: Infinity, ease: 'linear' }}
           />
-        </div>
+          <motion.div
+            className="absolute rounded-full border border-emerald-300/18"
+            style={{ width: 460, height: 460, top: '38%', left: '8%' }}
+            animate={{ rotate: [0, -360] }}
+            transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
+          />
+        </motion.div>
 
         <div className="relative z-10">
-          <h2 className="text-xl font-semibold text-slate-100 mb-2">
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">
             Your Creative Constellation
           </h2>
-          <p className="text-xs text-slate-300/80 mb-6">
-            Each node is a realm of your creative life. Dive into wherever
-            pulls you the most today.
+          <p className="text-xs text-slate-300/80 mb-5 max-w-md">
+            Each glowing point is a realm of your creative life: practice,
+            rest, history, community, and future tech. Go where your curiosity
+            feels warmest.
           </p>
 
           <div className="relative h-80">
             {nodes.map((node, index) => {
               const angle = (index / nodes.length) * Math.PI * 2;
-              const radius = 90 + (index % 3) * 26;
+              const radius = 85 + (index % 3) * 28;
               const x = 50 + Math.cos(angle) * radius;
               const y = 50 + Math.sin(angle) * radius;
 
-              const ringColor =
+              const ringGlow =
                 node.ring === 'cyan'
-                  ? 'shadow-[0_0_0_2px_rgba(34,211,238,0.4)]'
-                  : node.ring === 'amber'
-                  ? 'shadow-[0_0_0_2px_rgba(251,191,36,0.4)]'
-                  : 'shadow-[0_0_0_2px_rgba(74,222,128,0.4)]';
+                  ? 'shadow-[0_0_0_1px_rgba(34,211,238,0.7),0_0_26px_rgba(34,211,238,0.45)] text-cyan-100'
+                  : node.ring === 'gold'
+                  ? 'shadow-[0_0_0_1px_rgba(251,191,36,0.7),0_0_26px_rgba(251,191,36,0.45)] text-amber-100'
+                  : node.ring === 'emerald'
+                  ? 'shadow-[0_0_0_1px_rgba(34,197,94,0.7),0_0_26px_rgba(34,197,94,0.45)] text-emerald-100'
+                  : 'shadow-[0_0_0_1px_rgba(244,114,182,0.7),0_0_26px_rgba(244,114,182,0.45)] text-rose-100';
 
               return (
                 <motion.div
                   key={node.href}
                   className="absolute"
-                  style={{ left: `${x}%`, top: `${y}%`, transform: 'translate(-50%, -50%)' }}
-                  whileHover={{ scale: 1.15 }}
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                  whileHover={{ scale: 1.16 }}
                   transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                 >
                   <Link href={node.href}>
                     <motion.div
-                      className={`rounded-full px-3 py-1 text-[0.7rem] bg-slate-900/90 border border-slate-500/80 ${ringColor}`}
-                      style={{
-                        boxShadow:
-                          '0 0 20px rgba(15,23,42,1), 0 0 38px rgba(15,23,42,0.9)'
-                      }}
+                      className={`rounded-full px-3 py-1 text-[0.7rem] bg-slate-950/95 border border-slate-500/80 ${ringGlow}`}
                       animate={{
-                        y: [0, -4, 0],
+                        y: [0, index % 2 === 0 ? -4 : 4, 0],
                         opacity: [0.9, 1, 0.95]
                       }}
                       transition={{
-                        duration: 5 + (index % 4),
+                        duration: 6 + (index % 4),
                         repeat: Infinity,
                         ease: 'easeInOut'
                       }}
@@ -112,26 +124,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Right: Daily Pulse */}
+      {/* Daily Pulse / Ritual */}
       <section className="space-y-4">
         <div className="card">
           <h3 className="text-sm font-semibold text-slate-100 mb-2">
             Today&apos;s Creative Pulse
           </h3>
-          <p className="text-xs text-slate-300 mb-2">
-            Constraint:
-          </p>
+          <p className="text-xs text-slate-400 mb-1">Constraint</p>
           <p className="text-sm text-cyan-200 mb-3">{constraint}</p>
-          <p className="text-xs text-slate-300 mb-2">
-            Inner question:
-          </p>
-          <p className="text-sm text-amber-100 mb-3">{challenge}</p>
+          <p className="text-xs text-slate-400 mb-1">Inner question</p>
+          <p className="text-sm text-amber-100 mb-4">{challenge}</p>
 
-          <div className="flex gap-2 mt-3">
+          <div className="flex gap-2 mt-2">
             {miniPalette.map((c, i) => (
               <div
                 key={i}
-                className="flex-1 h-6 rounded-full"
+                className="flex-1 h-7 rounded-full"
                 style={{ background: c }}
               />
             ))}
@@ -139,7 +147,7 @@ export default function HomePage() {
 
           <button
             onClick={() => setSeed(Date.now())}
-            className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-slate-500 text-[0.7rem]"
+            className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-500 text-[0.7rem]"
           >
             Shuffle today
           </button>
@@ -147,12 +155,14 @@ export default function HomePage() {
 
         <div className="card">
           <h3 className="text-sm font-semibold text-slate-100 mb-2">
-            How to use this universe
+            How to travel this universe
           </h3>
           <ul className="text-[0.7rem] text-slate-300 space-y-1">
-            <li>Pick the node that pulls you the most — don&apos;t overthink.</li>
-            <li>Give yourself 10–20 minutes; treat it like a ritual.</li>
-            <li>Let artifacts accumulate over time as proof of your practice.</li>
+            <li>Choose the realm that feels warmest or most uncomfortable.</li>
+            <li>Give it 10–20 minutes. No doomscrolling in between.</li>
+            <li>
+              Let your sessions become small stars in a long-term creative sky.
+            </li>
           </ul>
         </div>
       </section>
