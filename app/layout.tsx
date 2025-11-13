@@ -2,45 +2,49 @@
 
 import './globals.css';
 import React, { useEffect, useState } from 'react';
-import { ThemeProvider, useTheme } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SunMedium, Moon } from 'lucide-react';
+import { Sparkles, Orbital } from 'lucide-react';
 
-const links = [
-  { href: '/', label: 'Home' },
+const navLinks = [
+  { href: '/', label: 'Constellation' },
   { href: '/flow', label: 'Flow' },
   { href: '/practice', label: 'Practice' },
-  { href: '/museum', label: 'Museum' },
+  { href: '/museum', label: 'Archive' },
+  { href: '/wellbeing', label: 'Inner Studio' },
   { href: '/market', label: 'Market' },
-  { href: '/marketing', label: 'Marketing' }
+  { href: '/marketing', label: 'Sharing' },
+  { href: '/community', label: 'Community' },
+  { href: '/codex', label: 'Creative Codex' }
 ];
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
+        {/* layered background */}
+        <div className="bg-anim" aria-hidden="true" />
+        <div className="cosmic-noise" aria-hidden="true" />
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <Background />
-          <AppFrame>{children}</AppFrame>
+          <UniverseShell>{children}</UniverseShell>
         </ThemeProvider>
       </body>
     </html>
   );
 }
 
-function Background() {
-  return <div className="bg-anim" aria-hidden="true" />;
-}
-
-function AppFrame({ children }: { children: React.ReactNode }) {
+function UniverseShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { resolvedTheme, setTheme } = useTheme();
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowSplash(false), 1200);
+    const t = setTimeout(() => setShowSplash(false), 1400);
     return () => clearTimeout(t);
   }, []);
 
@@ -48,46 +52,55 @@ function AppFrame({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen">
-      <header className="container flex items-center justify-between mb-4 mt-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold header-accent">
-            Human Creativity Toolkit
-          </h1>
-          <p className="text-xs md:text-sm text-purple-300">
-            Tools to strengthen your creative practice — human-first.
-          </p>
+      <header className="container pt-5 pb-3 relative">
+        <div className="cosmic-orb" aria-hidden="true" />
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <Orbital size={22} className="text-cyan-300" />
+              <h1 className="text-2xl md:text-3xl font-extrabold header-accent">
+                Human Creativity Universe
+              </h1>
+            </div>
+            <p className="text-xs md:text-sm text-slate-300/80 mt-1 max-w-md">
+              A cosmic operating system for your creative life — mind, body,
+              spirit, and practice in one living world.
+            </p>
+          </div>
+          <div className="hidden md:flex items-center gap-2 text-xs text-slate-300/90">
+            <Sparkles size={16} className="text-amber-300" />
+            <span>Your current realm adapts to you.</span>
+          </div>
         </div>
-        <button
-          className="nav-link"
-          onClick={() =>
-            setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
-          }
-        >
-          {resolvedTheme === 'dark' ? <SunMedium size={16} /> : <Moon size={16} />}
-        </button>
+
+        {/* nav bar */}
+        <nav className="mt-5 flex flex-wrap gap-2">
+          {navLinks.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link key={link.href} href={link.href}>
+                <button
+                  className={`nav-link ${
+                    active
+                      ? 'border-cyan-300/90 text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.7),0_0_28px_rgba(34,211,238,0.35)]'
+                      : 'text-slate-200/80'
+                  }`}
+                >
+                  {link.label}
+                </button>
+              </Link>
+            );
+          })}
+        </nav>
       </header>
 
-      <nav className="container flex flex-wrap gap-2 mb-6">
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={`nav-link ${
-              pathname === link.href ? 'ring-2 ring-accent/60' : ''
-            }`}
-          >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
-
-      <main className="container">
+      <main className="container pb-10">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={pathname}
-            initial={{ opacity: 0, y: 8, filter: 'blur(2px)' }}
+            initial={{ opacity: 0, y: 10, filter: 'blur(3px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -8, filter: 'blur(2px)' }}
+            exit={{ opacity: 0, y: -10, filter: 'blur(3px)' }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             {children}
@@ -95,9 +108,10 @@ function AppFrame({ children }: { children: React.ReactNode }) {
         </AnimatePresence>
       </main>
 
-      <footer className="container mt-10 mb-8 text-xs text-purple-300/70">
-        Built for artists, by artists. No AI generation — just tools to
-        enhance your human creativity.
+      <footer className="container pb-6 text-[0.7rem] text-slate-400/80">
+        Built for human artists in a changing world. This space does not
+        generate art for you — it helps you remember that you are the
+        generator.
       </footer>
     </div>
   );
@@ -107,23 +121,28 @@ function Splash() {
   return (
     <div className="splash-bg">
       <motion.div
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center"
+        initial={{ opacity: 0, y: 18, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
+        className="text-center px-6"
       >
-        <div className="splash-title header-accent">
-          Human Creativity Toolkit
-        </div>
-        <div style={{ height: 10 }} />
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.9 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-sm text-purple-200"
+          className="splash-title header-accent"
+          initial={{ letterSpacing: '0.2em' }}
+          animate={{ letterSpacing: '-0.06em' }}
+          transition={{ duration: 0.9 }}
         >
-          Minimal • Human-first • Practice
+          HUMAN CREATIVITY UNIVERSE
         </motion.div>
+        <motion.p
+          className="mt-4 text-sm text-slate-200/90"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.7 }}
+        >
+          Enter a living, cosmic space designed to protect and expand your
+          creative life.
+        </motion.p>
       </motion.div>
     </div>
   );
