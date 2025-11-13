@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bg-start: #071026;
-  --bg-end: #0b1220;
+  --bg-start: #020617; /* deep slate */
+  --bg-end: #020817;
+  --accent-1: #22d3ee; /* cyan */
+  --accent-2: #fbbf24; /* amber */
+  --accent-3: #4ade80; /* green */
 }
 
 html,
@@ -14,66 +17,63 @@ body {
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, -system-ui,
-    -apple-system, BlinkMacSystemFont, "SF Pro Text", -sf-pro-text, -apple-system,
-    BlinkMacSystemFont, -system-ui, sans-serif;
-  color: #eae6ff;
-  background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    -sf-pro-text, sans-serif;
+  color: #e5e7eb;
+  background: radial-gradient(
+      circle at top left,
+      rgba(34, 211, 238, 0.08),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(251, 191, 36, 0.08),
+      transparent 55%
+    ),
+    linear-gradient(180deg, var(--bg-start), var(--bg-end));
 }
 
-.header-accent {
-  background: linear-gradient(90deg, #7c3aed, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.card {
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(139, 92, 246, 0.12);
-  padding: 1rem;
-  border-radius: 1rem;
-  backdrop-filter: blur(6px);
-}
-
-/* Subtle animated background */
+/* floating particle background */
 .bg-anim {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(1200px 800px at 10% 20%, rgba(124, 58, 237, 0.06), transparent 60%),
-    radial-gradient(1200px 800px at 90% 80%, rgba(236, 72, 153, 0.05), transparent 60%),
-    radial-gradient(1000px 700px at 50% 50%, rgba(56, 189, 248, 0.04), transparent 60%);
-  animation: floaty 22s ease-in-out infinite alternate;
+    radial-gradient(800px 600px at 15% 20%, rgba(34, 211, 238, 0.12), transparent 60%),
+    radial-gradient(1000px 700px at 85% 80%, rgba(244, 114, 182, 0.1), transparent 55%),
+    radial-gradient(900px 600px at 50% 50%, rgba(248, 250, 252, 0.04), transparent 60%);
+  animation: drift 30s ease-in-out infinite alternate;
+  opacity: 0.95;
 }
 
-@keyframes floaty {
+@keyframes drift {
   from {
-    transform: translateY(-2%) scale(1);
+    transform: translate3d(-1%, 0, 0) scale(1);
     filter: saturate(1);
   }
   to {
-    transform: translateY(2%) scale(1.03);
-    filter: saturate(1.05);
+    transform: translate3d(1%, 2%, 0) scale(1.03);
+    filter: saturate(1.1);
   }
 }
 
-/* Splash */
-.splash-bg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-  background: linear-gradient(135deg, #071026, #0b1220);
+.header-accent {
+  background: linear-gradient(120deg, #22d3ee, #fbbf24, #4ade80);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-.splash-title {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 1.5rem;
+  padding: 1.25rem;
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 1);
+  backdrop-filter: blur(18px);
 }
 
 .container {
@@ -83,12 +83,43 @@ body {
 }
 
 .nav-link {
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.75rem;
-  background: rgba(51, 65, 85, 0.25);
-  font-size: 0.85rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(51, 65, 85, 0.9);
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .nav-link:hover {
-  background: rgba(51, 65, 85, 0.35);
+  border-color: rgba(148, 163, 184, 0.9);
+  background: rgba(15, 23, 42, 0.95);
+}
+
+/* splash */
+.splash-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background: radial-gradient(
+      circle at top,
+      rgba(34, 211, 238, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at bottom,
+      rgba(251, 191, 36, 0.18),
+      transparent 60%
+    ),
+    #020617;
+}
+
+.splash-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
 }
