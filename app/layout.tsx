@@ -15,6 +15,7 @@ const navLinks = [
   { href: '/practice', label: 'Practice' },
   { href: '/museum', label: 'Archive' },
   { href: '/wellbeing', label: 'Inner Studio' },
+  { href: '/journal', label: 'Journal' },
   { href: '/market', label: 'Market' },
   { href: '/marketing', label: 'Sharing' },
   { href: '/community', label: 'Community' },
