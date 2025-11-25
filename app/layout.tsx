@@ -6,7 +6,8 @@ import { ThemeProvider } from 'next-themes';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sparkles, Orbital } from 'lucide-react';
+import { Orbital } from 'lucide-react';
+import { AuraBadge } from './components/AuraBadge';
 
 const navLinks = [
   { href: '/', label: 'Constellation' },
@@ -17,7 +18,8 @@ const navLinks = [
   { href: '/market', label: 'Market' },
   { href: '/marketing', label: 'Sharing' },
   { href: '/community', label: 'Community' },
-  { href: '/codex', label: 'Creative Codex' }
+  { href: '/codex', label: 'Creative Codex' },
+  { href: '/profile', label: 'Your Aura' }
 ];
 
 export default function RootLayout({
@@ -28,7 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        {/* layered background */}
         <div className="bg-anim" aria-hidden="true" />
         <div className="cosmic-noise" aria-hidden="true" />
         <ThemeProvider attribute="class" defaultTheme="dark">
@@ -54,7 +55,7 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen">
       <header className="container pt-5 pb-3 relative">
         <div className="cosmic-orb" aria-hidden="true" />
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <Orbital size={22} className="text-cyan-300" />
@@ -67,9 +68,8 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
               spirit, and practice in one living world.
             </p>
           </div>
-          <div className="hidden md:flex items-center gap-2 text-xs text-slate-300/90">
-            <Sparkles size={16} className="text-amber-300" />
-            <span>Your current realm adapts to you.</span>
+          <div className="flex justify-start md:justify-end">
+            <AuraBadge />
           </div>
         </div>
 
