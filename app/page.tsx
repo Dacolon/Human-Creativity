@@ -6,6 +6,13 @@ import Link from 'next/link';
 import { constraints, challenges } from '../data/constants';
 import { generateRandomColor } from '../utils/colors';
 
+type Star = {
+  x: number;
+  y: number;
+  size: number;
+  delay: number;
+};
+
 const nodes = [
   { href: '/flow', label: 'Flow', ring: 'cyan' },
   { href: '/practice', label: 'Practice', ring: 'emerald' },
@@ -27,6 +34,7 @@ function pick(seed: number, arr: string[]) {
 
 export default function HomePage() {
   const [seed, setSeed] = React.useState(() => Date.now());
+
   const constraint = pick(seed, constraints);
   const challenge = pick(seed + 1, challenges);
   const miniPalette = [
@@ -35,50 +43,83 @@ export default function HomePage() {
     generateRandomColor()
   ];
 
+  const stars = React.useMemo<Star[]>(
+    () =>
+      Array.from({ length: 42 }).map((_, i) => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: 1 + Math.random() * 2,
+        delay: Math.random() * 8 + i * 0.05
+      })),
+    []
+  );
+
   return (
-    <div className="grid md:grid-cols-[1.4fr_1fr] gap-8 items-stretch">
-      {/* Constellation */}
-      <section className="card relative overflow-hidden">
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden="true"
-        >
+    <div className="grid md:grid-cols-[1.5fr_1fr] gap-8 items-stretch">
+      {/* LEFT: Cosmic Star Map */}
+      <section className="card relative overflow-hidden min-h-[320px]">
+        {/* starfield */}
+        <div className="absolute inset-0 pointer-events-none">
+          {stars.map((star, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-slate-100"
+              style={{
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+                width: star.size,
+                height: star.size,
+                opacity: 0.4
+              }}
+              animate={{ opacity: [0.1, 0.8, 0.2] }}
+              transition={{
+                duration: 6 + (i % 4),
+                delay: star.delay,
+                repeat: Infinity,
+                ease: 'easeInOut'
+              }}
+            />
+          ))}
+
+          {/* orbiting halo rings */}
           <motion.div
             className="absolute rounded-full border border-cyan-400/25"
-            style={{ width: 260, height: 260, top: '6%', left: '6%' }}
+            style={{ width: 260, height: 260, top: '10%', left: '10%' }}
             animate={{ rotate: [0, 360] }}
-            transition={{ duration: 48, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
           />
           <motion.div
             className="absolute rounded-full border border-amber-300/20"
-            style={{ width: 360, height: 360, top: '28%', left: '24%' }}
+            style={{ width: 360, height: 360, top: '32%', left: '26%' }}
             animate={{ rotate: [360, 0] }}
-            transition={{ duration: 62, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 70, repeat: Infinity, ease: 'linear' }}
           />
           <motion.div
             className="absolute rounded-full border border-emerald-300/18"
-            style={{ width: 460, height: 460, top: '38%', left: '8%' }}
+            style={{ width: 480, height: 480, top: '38%', left: '6%' }}
             animate={{ rotate: [0, -360] }}
-            transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
           />
-        </motion.div>
+        </div>
 
-        <div className="relative z-10">
-          <h2 className="text-lg font-semibold text-slate-100 mb-2">
-            Your Creative Constellation
-          </h2>
-          <p className="text-xs text-slate-300/80 mb-5 max-w-md">
-            Each glowing point is a realm of your creative life: practice,
-            rest, history, community, and future tech. Go where your curiosity
-            feels warmest.
-          </p>
+        <div className="relative z-10 h-full flex flex-col">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-slate-100">
+              Cosmic Navigation Map
+            </h2>
+            <p className="text-[0.75rem] text-slate-300/85 max-w-md mt-1">
+              Each glowing node is a realm of your creative universe: practice,
+              history, community, inner world, and future tech. Tap a star and
+              step through the portal.
+            </p>
+          </div>
 
-          <div className="relative h-80">
+          <div className="relative flex-1">
             {nodes.map((node, index) => {
               const angle = (index / nodes.length) * Math.PI * 2;
-              const radius = 85 + (index % 3) * 28;
+              const radius = 80 + (index % 3) * 28;
               const x = 50 + Math.cos(angle) * radius;
-              const y = 50 + Math.sin(angle) * radius;
+              const y = 52 + Math.sin(angle) * radius;
 
               const ringGlow =
                 node.ring === 'cyan'
@@ -99,14 +140,15 @@ export default function HomePage() {
                     transform: 'translate(-50%, -50%)'
                   }}
                   whileHover={{ scale: 1.16 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+                  whileTap={{ scale: 0.94 }}
+                  transition={{ type: 'spring', stiffness: 280, damping: 20 }}
                 >
                   <Link href={node.href}>
                     <motion.div
                       className={`rounded-full px-3 py-1 text-[0.7rem] bg-slate-950/95 border border-slate-500/80 ${ringGlow}`}
                       animate={{
                         y: [0, index % 2 === 0 ? -4 : 4, 0],
-                        opacity: [0.9, 1, 0.95]
+                        opacity: [0.8, 1, 0.9]
                       }}
                       transition={{
                         duration: 6 + (index % 4),
@@ -124,7 +166,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Daily Pulse / Ritual */}
+      {/* RIGHT: Daily Pulse / Ritual */}
       <section className="space-y-4">
         <div className="card">
           <h3 className="text-sm font-semibold text-slate-100 mb-2">
@@ -168,4 +210,4 @@ export default function HomePage() {
       </section>
     </div>
   );
-}
+   }
