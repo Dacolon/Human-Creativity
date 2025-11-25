@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useAuraProfile, AuraProfile } from '../hooks/useAuraProfile';
 
 const topics = [
   { label: 'Daily Creations', color: 'from-cyan-400 to-blue-500' },
@@ -9,21 +10,30 @@ const topics = [
   { label: 'Ideas & Brainstorms', color: 'from-amber-400 to-orange-500' },
   { label: 'Inspiration Drops', color: 'from-emerald-400 to-green-500' },
   { label: 'Emotional Support', color: 'from-rose-400 to-red-500' },
-  { label: 'Work-in-Progress', color: 'from-indigo-400 to-indigo-600' },
+  { label: 'Work-in-Progress', color: 'from-indigo-400 to-indigo-600' }
 ];
 
+type CommunityPost = {
+  id: number;
+  text: string;
+  topic: string;
+  date: string;
+  aura?: AuraProfile;
+};
+
 export default function CommunityPage() {
-  const [posts, setPosts] = useState([]);
+  const { profile } = useAuraProfile();
+  const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [draft, setDraft] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
 
-  // Load posts from localStorage
+  // Load posts
   useEffect(() => {
     const saved = localStorage.getItem('community-posts');
     if (saved) setPosts(JSON.parse(saved));
   }, []);
 
-  // Save posts to localStorage
+  // Save posts
   useEffect(() => {
     localStorage.setItem('community-posts', JSON.stringify(posts));
   }, [posts]);
@@ -31,11 +41,12 @@ export default function CommunityPage() {
   const submitPost = () => {
     if (!draft.trim() || !selectedTopic) return;
 
-    const newPost = {
+    const newPost: CommunityPost = {
       id: Date.now(),
       text: draft.trim(),
       topic: selectedTopic,
       date: new Date().toLocaleString(),
+      aura: profile || undefined
     };
 
     setPosts([newPost, ...posts]);
@@ -44,7 +55,6 @@ export default function CommunityPage() {
 
   return (
     <div className="space-y-10">
-
       {/* Header */}
       <motion.h1
         className="text-4xl font-bold header-accent"
@@ -75,11 +85,15 @@ export default function CommunityPage() {
             animate={{
               opacity: 1,
               y: 0,
-              transition: { delay: 0.1 + i * 0.05 },
+              transition: { delay: 0.1 + i * 0.05 }
             }}
             className={`px-4 py-2 text-sm rounded-full bg-gradient-to-r ${t.color} 
             text-white shadow-lg hover:scale-105 transition cursor-pointer
-            ${selectedTopic === t.label ? 'ring-2 ring-white' : ''}`}
+            ${
+              selectedTopic === t.label
+                ? 'ring-2 ring-white'
+                : 'ring-0 opacity-90'
+            }`}
           >
             {t.label}
           </motion.button>
@@ -90,8 +104,12 @@ export default function CommunityPage() {
       <div className="space-y-4 mt-6">
         <textarea
           value={draft}
-          onChange={e => setDraft(e.target.value)}
-          placeholder="Share something with the constellation..."
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder={
+            profile
+              ? `What would ${profile.name} like to share with the constellation?`
+              : 'Share something with the constellation...'
+          }
           className="w-full h-28 p-4 rounded-xl bg-slate-800/50 border border-slate-600/40
           text-slate-200 text-sm focus:ring-2 focus:ring-cyan-400 outline-none"
         />
@@ -112,20 +130,38 @@ export default function CommunityPage() {
             No messages yet. Be the first star to speak.
           </p>
         ) : (
-          posts.map(post => (
+          posts.map((post) => (
             <motion.div
               key={post.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               className="card bg-gradient-to-br from-blue-400/10 to-slate-700/10"
             >
-              <div className="text-cyan-300 text-xs font-semibold">
-                {post.topic}
+              <div className="flex items-center justify-between text-xs mb-1">
+                <span className="text-cyan-300 font-semibold">
+                  {post.topic}
+                </span>
+                <span className="text-slate-400">{post.date}</span>
               </div>
-              <p className="text-slate-200 text-sm mt-2 whitespace-pre-line">
+
+              {post.aura && (
+                <div className="flex items-center gap-2 text-[0.75rem] mb-2">
+                  <span>{post.aura.symbol}</span>
+                  <span
+                    className="font-semibold"
+                    style={{ color: post.aura.color }}
+                  >
+                    {post.aura.name}
+                  </span>
+                  <span className="text-slate-500">
+                    · {post.aura.element.toUpperCase()} aura
+                  </span>
+                </div>
+              )}
+
+              <p className="text-slate-200 text-sm mt-1 whitespace-pre-line">
                 {post.text}
               </p>
-              <div className="text-slate-400 text-xs mt-3">{post.date}</div>
             </motion.div>
           ))
         )}
