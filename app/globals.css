@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
 /* ---------- Base theme ---------- */
 
 :root {
@@ -20,12 +23,17 @@ body {
 
 body {
   @apply text-slate-50;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    ui-sans-serif, "Segoe UI", sans-serif;
+  font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont,
+    "SF Pro Text", ui-sans-serif, "Segoe UI", sans-serif;
   background: #020617;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+}
+
+/* headings use the sci-fi font */
+.font-space {
+  font-family: "Space Grotesk", system-ui, sans-serif;
 }
 
 /* Tailwind container tweak */
@@ -51,7 +59,7 @@ body {
   animation: bgShift 40s ease-in-out infinite alternate;
 }
 
-/* Starfield layer (animated) */
+/* Animated starfield */
 .cosmic-noise {
   position: fixed;
   inset: 0;
@@ -72,7 +80,7 @@ body {
   animation: starDrift 75s linear infinite;
 }
 
-/* We removed the big orange orb visually, but keep the class if anything still uses it */
+/* No more big orange orb */
 .cosmic-orb {
   display: none;
 }
@@ -125,13 +133,28 @@ body {
   animation: headerGlow 18s ease-in-out infinite alternate;
 }
 
-/* ---------- Cards, nav buttons, UI shells ---------- */
+/* ---------- Floating glass panels / cards ---------- */
 
 .card {
   @apply rounded-3xl border border-slate-700/70 bg-slate-950/80 shadow-[0_20px_50px_rgba(2,6,23,0.9)] p-4 md:p-5;
   backdrop-filter: blur(20px);
 }
 
+/* reusable “floating” helpers */
+.float-slow {
+  animation: floatSlow 10s ease-in-out infinite;
+}
+
+.float-slower {
+  animation: floatSlow 14s ease-in-out infinite;
+}
+
+.float-delay {
+  animation: floatSlow 12s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+/* nav buttons */
 .nav-link {
   @apply inline-flex items-center justify-center rounded-full px-4 py-2.5 text-xs md:text-sm font-medium border border-slate-800 bg-slate-950/90;
   box-shadow:
@@ -146,7 +169,7 @@ body {
 }
 
 .nav-link:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow:
     0 0 0 1px rgba(56, 189, 248, 0.6),
     0 22px 48px rgba(8, 47, 73, 0.95);
@@ -155,7 +178,7 @@ body {
   border-color: rgba(56, 189, 248, 0.9);
 }
 
-/* slightly more breathing room between stacked cards */
+/* space between stacked cards */
 main .card + .card {
   margin-top: 1rem;
 }
@@ -226,7 +249,19 @@ main .card + .card {
   }
 }
 
-/* small screen padding for footer + main spacing */
+@keyframes floatSlow {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* small screen padding */
 main {
   padding-top: 0.5rem;
 }
@@ -235,8 +270,7 @@ footer {
   margin-top: 0.5rem;
 }
 
-/* ---------- Optional: smooth scroll ---------- */
-
+/* smooth scroll */
 html {
   scroll-behavior: smooth;
 }
