@@ -35,6 +35,7 @@ export default function RootLayout({
         {/* animated background layers */}
         <div className="bg-anim" aria-hidden="true" />
         <div className="cosmic-noise" aria-hidden="true" />
+        <div className="cosmic-depth" aria-hidden="true" />
         <ThemeProvider attribute="class" defaultTheme="dark">
           <SoundProvider>
             <UniverseShell>{children}</UniverseShell>
@@ -50,7 +51,7 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowSplash(false), 1400);
+    const t = setTimeout(() => setShowSplash(false), 1500);
     return () => clearTimeout(t);
   }, []);
 
@@ -59,7 +60,6 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="container pt-5 pb-3 relative">
-        {/* (orb removed) */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -115,68 +115,4 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <footer className="container pb-6 text-[0.7rem] text-slate-400/80">
-        Built for human artists in a changing world. This space does not
-        generate art for you — it helps you remember that you are the
-        generator.
-      </footer>
-    </div>
-  );
-}
-
-function SoundControls() {
-  const { playing, stop, play, volume, setVolume } = useSound();
-
-  return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={() => (playing ? stop() : play('flow'))}
-        className="p-2 rounded-full hover:bg-slate-800/60 border border-slate-600/60 text-slate-200 transition"
-        aria-label={playing ? 'Mute soundscape' : 'Play soundscape'}
-      >
-        {playing ? <VolumeX size={16} /> : <Volume2 size={16} />}
-      </button>
-      {playing && (
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={(e) => setVolume(parseFloat(e.target.value))}
-          className="w-20 accent-cyan-400"
-        />
-      )}
-    </div>
-  );
-}
-
-function Splash() {
-  return (
-    <div className="splash-bg">
-      <motion.div
-        initial={{ opacity: 0, y: 18, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
-        className="text-center px-6"
-      >
-        <motion.div
-          className="splash-title header-accent"
-          initial={{ letterSpacing: '0.2em' }}
-          animate={{ letterSpacing: '-0.06em' }}
-          transition={{ duration: 0.9 }}
-        >
-          HUMAN CREATIVITY UNIVERSE
-        </motion.div>
-        <motion.p
-          className="mt-4 text-sm text-slate-200/90"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.7 }}
-        >
-          Enter a living, cosmic space designed to protect and expand your
-          creative life.
-        </motion.p>
-      </motion.div>
-    </div>
-  );
-}
+        Built for human artists
