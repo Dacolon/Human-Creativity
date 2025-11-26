@@ -1,213 +1,186 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
+import { Compass, Clock, Sparkles, PenTool } from 'lucide-react';
 import Link from 'next/link';
-import { constraints, challenges } from '../data/constants';
-import { generateRandomColor } from '../utils/colors';
 
-type Star = {
-  x: number;
-  y: number;
-  size: number;
-  delay: number;
+const floatTransition = {
+  duration: 10,
+  repeat: Infinity,
+  repeatType: 'reverse' as const,
+  ease: 'easeInOut' as const
 };
 
-const nodes = [
-  { href: '/flow', label: 'Flow', ring: 'cyan' },
-  { href: '/practice', label: 'Practice', ring: 'emerald' },
-  { href: '/museum', label: 'Archive', ring: 'gold' },
-  { href: '/wellbeing', label: 'Inner Studio', ring: 'rose' },
-  { href: '/market', label: 'Market', ring: 'cyan' },
-  { href: '/marketing', label: 'Sharing', ring: 'gold' },
-  { href: '/community', label: 'Community', ring: 'emerald' },
-  { href: '/codex', label: 'Creative Codex', ring: 'rose' },
-  { href: '/codex/funding', label: 'Funding', ring: 'cyan' },
-  { href: '/codex/art-history', label: 'Art & History', ring: 'gold' },
-  { href: '/codex/ai-creation', label: 'AI & Creation', ring: 'emerald' },
-  { href: '/codex/isolation', label: 'Solitude', ring: 'rose' }
-];
-
-function pick(seed: number, arr: string[]) {
-  return arr[Math.abs(Math.floor(Math.sin(seed) * 10000)) % arr.length];
-}
-
 export default function HomePage() {
-  const [seed, setSeed] = React.useState(() => Date.now());
-
-  const constraint = pick(seed, constraints);
-  const challenge = pick(seed + 1, challenges);
-  const miniPalette = [
-    generateRandomColor(),
-    generateRandomColor(),
-    generateRandomColor()
-  ];
-
-  const stars = React.useMemo<Star[]>(
-    () =>
-      Array.from({ length: 42 }).map((_, i) => ({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 1 + Math.random() * 2,
-        delay: Math.random() * 8 + i * 0.05
-      })),
-    []
-  );
-
   return (
-    <div className="grid md:grid-cols-[1.5fr_1fr] gap-8 items-stretch">
-      {/* LEFT: Cosmic Star Map */}
-      <section className="card relative overflow-hidden min-h-[320px]">
-        {/* starfield */}
-        <div className="absolute inset-0 pointer-events-none">
-          {stars.map((star, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full bg-slate-100"
-              style={{
-                left: `${star.x}%`,
-                top: `${star.y}%`,
-                width: star.size,
-                height: star.size,
-                opacity: 0.4
-              }}
-              animate={{ opacity: [0.1, 0.8, 0.2] }}
-              transition={{
-                duration: 6 + (i % 4),
-                delay: star.delay,
-                repeat: Infinity,
-                ease: 'easeInOut'
-              }}
-            />
-          ))}
-
-          {/* orbiting halo rings */}
-          <motion.div
-            className="absolute rounded-full border border-cyan-400/25"
-            style={{ width: 260, height: 260, top: '10%', left: '10%' }}
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.div
-            className="absolute rounded-full border border-amber-300/20"
-            style={{ width: 360, height: 360, top: '32%', left: '26%' }}
-            animate={{ rotate: [360, 0] }}
-            transition={{ duration: 70, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.div
-            className="absolute rounded-full border border-emerald-300/18"
-            style={{ width: 480, height: 480, top: '38%', left: '6%' }}
-            animate={{ rotate: [0, -360] }}
-            transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
-          />
+    <div className="space-y-5 pb-4">
+      {/* Row 1: Today in your universe */}
+      <motion.section
+        className="card float-slow"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <div className="flex items-center gap-3 mb-3">
+          <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-500/20 border border-cyan-400/60">
+            <Sparkles size={16} className="text-cyan-300" />
+          </div>
+          <h2 className="cosmic-section-title font-space">
+            Today in your universe
+          </h2>
         </div>
+        <p className="cosmic-subtle mb-4">
+          Pick one tiny action to keep your creative orbit moving. No pressure,
+          no perfection — just momentum.
+        </p>
 
-        <div className="relative z-10 h-full flex flex-col">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-slate-100">
-              Cosmic Navigation Map
-            </h2>
-            <p className="text-[0.75rem] text-slate-300/85 max-w-md mt-1">
-              Each glowing node is a realm of your creative universe: practice,
-              history, community, inner world, and future tech. Tap a star and
-              step through the portal.
+        <div className="grid gap-3 md:grid-cols-3">
+          <div className="rounded-2xl bg-slate-900/70 border border-slate-700/70 p-3">
+            <p className="text-[0.7rem] uppercase tracking-wide text-slate-400 mb-1">
+              10-minute ritual
+            </p>
+            <p className="text-sm text-slate-50">
+              Put your phone on airplane mode and fill a page with marks:
+              circles, lines, dots — no images, just movement.
             </p>
           </div>
-
-          <div className="relative flex-1">
-            {nodes.map((node, index) => {
-              const angle = (index / nodes.length) * Math.PI * 2;
-              const radius = 80 + (index % 3) * 28;
-              const x = 50 + Math.cos(angle) * radius;
-              const y = 52 + Math.sin(angle) * radius;
-
-              const ringGlow =
-                node.ring === 'cyan'
-                  ? 'shadow-[0_0_0_1px_rgba(34,211,238,0.7),0_0_26px_rgba(34,211,238,0.45)] text-cyan-100'
-                  : node.ring === 'gold'
-                  ? 'shadow-[0_0_0_1px_rgba(251,191,36,0.7),0_0_26px_rgba(251,191,36,0.45)] text-amber-100'
-                  : node.ring === 'emerald'
-                  ? 'shadow-[0_0_0_1px_rgba(34,197,94,0.7),0_0_26px_rgba(34,197,94,0.45)] text-emerald-100'
-                  : 'shadow-[0_0_0_1px_rgba(244,114,182,0.7),0_0_26px_rgba(244,114,182,0.45)] text-rose-100';
-
-              return (
-                <motion.div
-                  key={node.href}
-                  className="absolute"
-                  style={{
-                    left: `${x}%`,
-                    top: `${y}%`,
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                  whileHover={{ scale: 1.16 }}
-                  whileTap={{ scale: 0.94 }}
-                  transition={{ type: 'spring', stiffness: 280, damping: 20 }}
-                >
-                  <Link href={node.href}>
-                    <motion.div
-                      className={`rounded-full px-3 py-1 text-[0.7rem] bg-slate-950/95 border border-slate-500/80 ${ringGlow}`}
-                      animate={{
-                        y: [0, index % 2 === 0 ? -4 : 4, 0],
-                        opacity: [0.8, 1, 0.9]
-                      }}
-                      transition={{
-                        duration: 6 + (index % 4),
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                      }}
-                    >
-                      {node.label}
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              );
-            })}
+          <div className="rounded-2xl bg-slate-900/70 border border-slate-700/70 p-3">
+            <p className="text-[0.7rem] uppercase tracking-wide text-slate-400 mb-1">
+              Reflection
+            </p>
+            <p className="text-sm text-slate-50">
+              What feeling are you secretly making art about today, even if you
+              don&apos;t say it out loud?
+            </p>
+          </div>
+          <div className="rounded-2xl bg-slate-900/70 border border-slate-700/70 p-3">
+            <p className="text-[0.7rem] uppercase tracking-wide text-slate-400 mb-1">
+              Micro-commitment
+            </p>
+            <p className="text-sm text-slate-50">
+              Choose one realm — <span className="font-semibold">Flow</span>,{' '}
+              <span className="font-semibold">Practice</span>, or{' '}
+              <span className="font-semibold">Journal</span> — and promise
+              yourself just 5 focused minutes inside it.
+            </p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* RIGHT: Daily Pulse / Ritual */}
-      <section className="space-y-4">
-        <div className="card">
-          <h3 className="text-sm font-semibold text-slate-100 mb-2">
-            Today&apos;s Creative Pulse
-          </h3>
-          <p className="text-xs text-slate-400 mb-1">Constraint</p>
-          <p className="text-sm text-cyan-200 mb-3">{constraint}</p>
-          <p className="text-xs text-slate-400 mb-1">Inner question</p>
-          <p className="text-sm text-amber-100 mb-4">{challenge}</p>
-
-          <div className="flex gap-2 mt-2">
-            {miniPalette.map((c, i) => (
-              <div
-                key={i}
-                className="flex-1 h-7 rounded-full"
-                style={{ background: c }}
-              />
-            ))}
+      {/* Row 2: Quick portals into other realms */}
+      <motion.section
+        className="card float-delay"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut', delay: 0.05 }}
+      >
+        <div className="flex items-center gap-3 mb-3">
+          <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/25 border border-indigo-400/60">
+            <Compass size={16} className="text-indigo-200" />
           </div>
-
-          <button
-            onClick={() => setSeed(Date.now())}
-            className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-500 text-[0.7rem]"
-          >
-            Shuffle today
-          </button>
+          <h2 className="cosmic-section-title font-space">
+            Portals you can step through now
+          </h2>
         </div>
+        <p className="cosmic-subtle mb-4">
+          Each realm is a different kind of space: practice, reflection,
+          history, community. Tap one to drift deeper.
+        </p>
 
-        <div className="card">
-          <h3 className="text-sm font-semibold text-slate-100 mb-2">
-            How to travel this universe
-          </h3>
-          <ul className="text-[0.7rem] text-slate-300 space-y-1">
-            <li>Choose the realm that feels warmest or most uncomfortable.</li>
-            <li>Give it 10–20 minutes. No doomscrolling in between.</li>
-            <li>
-              Let your sessions become small stars in a long-term creative sky.
-            </li>
-          </ul>
+        <div className="grid gap-3 md:grid-cols-2">
+          <FloatingPortalCard
+            href="/flow"
+            title="Flow Realm"
+            tag="Warm-up & constraints"
+            description="Spin up random constraints, warmups, and prompts designed to get your hands moving before your brain can overthink."
+          />
+          <FloatingPortalCard
+            href="/wellbeing"
+            title="Inner Studio"
+            tag="Mind, body, spirit"
+            description="Short check-ins, grounding practices, and reminders that your nervous system is part of your creative toolkit."
+          />
+          <FloatingPortalCard
+            href="/museum"
+            title="Archive & Art History"
+            tag="Lineage & influence"
+            description="Reflect on art you love, understand why it hits you, and place your own work inside a much bigger human story."
+          />
+          <FloatingPortalCard
+            href="/community"
+            title="Community Realm"
+            tag="Future social space"
+            description="A future home for other humans building their creative life. For now, a reminder: you are not doing this alone."
+          />
         </div>
-      </section>
+      </motion.section>
+
+      {/* Row 3: Journal invite */}
+      <motion.section
+        className="card float-slower"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
+      >
+        <div className="flex items-center gap-3 mb-3">
+          <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-400/60">
+            <PenTool size={16} className="text-emerald-200" />
+          </div>
+          <h2 className="cosmic-section-title font-space">
+            A quiet orbit for your thoughts
+          </h2>
+        </div>
+        <p className="cosmic-subtle mb-4">
+          This universe isn&apos;t about output for social media. It&apos;s about
+          you having a private, honest place to talk to yourself as an artist.
+        </p>
+
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <p className="text-sm text-slate-50 md:max-w-md">
+            Open the <span className="font-semibold">Journal Realm</span> and
+            write for three minutes about what you&apos;re really trying to say
+            with your work right now. No polishing, no audience, no algorithm.
+          </p>
+          <Link href="/journal" className="md:shrink-0">
+            <button className="inline-flex items-center gap-2 rounded-full bg-emerald-500/90 hover:bg-emerald-400 text-slate-950 font-semibold text-sm px-4 py-2.5 shadow-[0_16px_40px_rgba(16,185,129,0.5)] transition-transform hover:-translate-y-[1px]">
+              <Clock size={16} />
+              Enter Journal Realm
+            </button>
+          </Link>
+        </div>
+      </motion.section>
     </div>
   );
-   }
+}
+
+function FloatingPortalCard(props: {
+  href: string;
+  title: string;
+  tag: string;
+  description: string;
+}) {
+  const { href, title, tag, description } = props;
+
+  return (
+    <motion.div
+      whileHover={{ y: -4, scale: 1.01 }}
+      transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+      className="rounded-2xl bg-slate-900/80 border border-slate-700/75 p-3 flex flex-col justify-between"
+    >
+      <div>
+        <p className="text-[0.65rem] uppercase tracking-[0.18em] text-slate-400 mb-1">
+          {tag}
+        </p>
+        <h3 className="text-sm font-space text-slate-50 mb-1">{title}</h3>
+        <p className="text-[0.8rem] text-slate-300">{description}</p>
+      </div>
+      <div className="mt-3">
+        <Link href={href}>
+          <span className="inline-flex items-center gap-1 text-[0.75rem] font-medium text-cyan-300 hover:text-cyan-200">
+            Enter portal
+          </span>
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
