@@ -6,7 +6,7 @@ import { ThemeProvider } from 'next-themes';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Orbital, Volume2, VolumeX } from 'lucide-react';
+import { Orbit, Volume2, VolumeX } from 'lucide-react';
 import { AuraBadge } from './components/AuraBadge';
 import { SoundProvider, useSound } from './components/SoundEngine';
 
@@ -64,7 +64,8 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <Orbital size={22} className="text-cyan-300" />
+              {/* 🔁 changed Orbital → Orbit here */}
+              <Orbit size={22} className="text-cyan-300" />
               <h1 className="text-2xl md:text-3xl font-extrabold header-accent">
                 Human Creativity Universe
               </h1>
