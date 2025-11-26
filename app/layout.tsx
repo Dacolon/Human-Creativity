@@ -25,7 +25,7 @@ const navLinks = [
 ];
 
 export default function RootLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
@@ -55,7 +55,9 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(t);
   }, []);
 
-  if (showSplash) return <Splash />;
+  if (showSplash) {
+    return <Splash />;
+  }
 
   return (
     <div className="min-h-screen">
@@ -115,4 +117,85 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <footer className="container pb-6 text-[0.7rem] text-slate-400/80">
-        Built for human artists
+        Built for human artists in a changing world. This space does not
+        generate art for you — it helps you remember that you are the
+        generator.
+      </footer>
+    </div>
+  );
+}
+
+function SoundControls() {
+  const { playing, stop, play, volume, setVolume } = useSound();
+
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => (playing ? stop() : play('flow'))}
+        className="p-2 rounded-full hover:bg-slate-800/60 border border-slate-600/60 text-slate-200 transition"
+        aria-label={playing ? 'Mute soundscape' : 'Play soundscape'}
+      >
+        {playing ? <VolumeX size={16} /> : <Volume2 size={16} />}
+      </button>
+      {playing && (
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onChange={(e) => setVolume(parseFloat(e.target.value))}
+          className="w-20 accent-cyan-400"
+        />
+      )}
+    </div>
+  );
+}
+
+/* ---------- Splash screen ---------- */
+
+function Splash() {
+  return (
+    <div className="splash-bg">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+        className="relative w-full max-w-xs sm:max-w-sm aspect-[4/5] rounded-[2rem] border border-slate-700/70 bg-slate-950/70 shadow-[0_26px_70px_rgba(0,0,0,0.95)] overflow-hidden"
+      >
+        {/* inner nebula */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(56,189,248,0.55),transparent_55%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.55),transparent_60%),radial-gradient(circle_at_50%_85%,rgba(129,140,248,0.6),transparent_60%)] opacity-70" />
+
+        {/* rotating ring */}
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 26, ease: 'linear' }}
+        >
+          <div className="h-40 w-40 rounded-full border border-cyan-300/50 border-t-transparent border-l-transparent opacity-70" />
+        </motion.div>
+
+        {/* orbiting dot */}
+        <motion.div
+          className="absolute left-1/2 top-1/2 h-2 w-2 -ml-[5.5rem] -mt-[0.1rem] rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(34,211,238,0.9)]"
+          animate={{ rotate: 360 }}
+          style={{ transformOrigin: '90px 0px' }}
+          transition={{ repeat: Infinity, duration: 12, ease: 'linear' }}
+        />
+
+        {/* content */}
+        <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
+          <p className="splash-title mb-3">HUMAN CREATIVITY UNIVERSE</p>
+          <h2 className="font-space text-xl text-slate-50 mb-2">
+            Preparing your orbit
+          </h2>
+          <p className="text-[0.8rem] text-slate-200/90 max-w-[16rem]">
+            A quiet, cosmic space for your human mind, body, spirit and creative
+            work. No feed. No noise. Just you.
+          </p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
