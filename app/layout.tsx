@@ -64,7 +64,7 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
           <div>
             <div className="flex items-center gap-2">
               <Orbit size={22} className="text-cyan-300" />
-              <h1 className="text-2xl md:text-3xl font-extrabold header-accent">
+              <h1 className="text-2xl md:text-3xl font-extrabold header-accent font-space">
                 Human Creativity Universe
               </h1>
             </div>
