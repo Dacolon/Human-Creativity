@@ -36,7 +36,6 @@ export default function RootLayout({
         <div className="bg-anim" aria-hidden="true" />
         <div className="cosmic-noise" aria-hidden="true" />
         <ThemeProvider attribute="class" defaultTheme="dark">
-          {/* 🔊 wrap everything in SoundProvider */}
           <SoundProvider>
             <UniverseShell>{children}</UniverseShell>
           </SoundProvider>
@@ -60,11 +59,10 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="container pt-5 pb-3 relative">
-        <div className="cosmic-orb" aria-hidden="true" />
+        {/* (orb removed) */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              {/* 🔁 changed Orbital → Orbit here */}
               <Orbit size={22} className="text-cyan-300" />
               <h1 className="text-2xl md:text-3xl font-extrabold header-accent">
                 Human Creativity Universe
@@ -77,14 +75,11 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-3 justify-start md:justify-end">
-            {/* 🔊 sound controls in header */}
             <SoundControls />
-            {/* ✨ aura identity badge */}
             <AuraBadge />
           </div>
         </div>
 
-        {/* nav bar */}
         <nav className="mt-5 flex flex-wrap gap-2">
           {navLinks.map((link) => {
             const active = pathname === link.href;
@@ -128,7 +123,6 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* 🔊 header sound controls */
 function SoundControls() {
   const { playing, stop, play, volume, setVolume } = useSound();
 
