@@ -6,8 +6,9 @@ import { ThemeProvider } from 'next-themes';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Orbital } from 'lucide-react';
+import { Orbital, Volume2, VolumeX } from 'lucide-react';
 import { AuraBadge } from './components/AuraBadge';
+import { SoundProvider, useSound } from './components/SoundEngine';
 
 const navLinks = [
   { href: '/', label: 'Constellation' },
@@ -31,10 +32,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
+        {/* animated background layers */}
         <div className="bg-anim" aria-hidden="true" />
         <div className="cosmic-noise" aria-hidden="true" />
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <UniverseShell>{children}</UniverseShell>
+          {/* 🔊 wrap everything in SoundProvider */}
+          <SoundProvider>
+            <UniverseShell>{children}</UniverseShell>
+          </SoundProvider>
         </ThemeProvider>
       </body>
     </html>
@@ -69,7 +74,11 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
               spirit, and practice in one living world.
             </p>
           </div>
-          <div className="flex justify-start md:justify-end">
+
+          <div className="flex items-center gap-3 justify-start md:justify-end">
+            {/* 🔊 sound controls in header */}
+            <SoundControls />
+            {/* ✨ aura identity badge */}
             <AuraBadge />
           </div>
         </div>
@@ -114,6 +123,34 @@ function UniverseShell({ children }: { children: React.ReactNode }) {
         generate art for you — it helps you remember that you are the
         generator.
       </footer>
+    </div>
+  );
+}
+
+/* 🔊 header sound controls */
+function SoundControls() {
+  const { playing, stop, play, volume, setVolume } = useSound();
+
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => (playing ? stop() : play('flow'))}
+        className="p-2 rounded-full hover:bg-slate-800/60 border border-slate-600/60 text-slate-200 transition"
+        aria-label={playing ? 'Mute soundscape' : 'Play soundscape'}
+      >
+        {playing ? <VolumeX size={16} /> : <Volume2 size={16} />}
+      </button>
+      {playing && (
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onChange={(e) => setVolume(parseFloat(e.target.value))}
+          className="w-20 accent-cyan-400"
+        />
+      )}
     </div>
   );
 }
