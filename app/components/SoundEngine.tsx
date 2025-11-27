@@ -1,93 +1,60 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+} from "react";
 
-type Soundscape = {
-  name: string;
-  file: string;
+export type SoundContextType = {
+  enabled: boolean;
+  toggle: () => void;
+  play: (kind?: "tap" | "enter") => void;
 };
 
-const defaultSoundscapes: Record<string, Soundscape> = {
-  flow: { name: 'Deep Focus Pulse', file: '/sounds/flow.mp3' },
-  practice: { name: 'Soft Studio Rustle', file: '/sounds/practice.mp3' },
-  museum: { name: 'Archive Silence', file: '/sounds/museum.mp3' },
-  wellbeing: { name: 'Breathing Light', file: '/sounds/wellbeing.mp3' },
-  journal: { name: 'Inner Sanctuary', file: '/sounds/journal.mp3' },
-  market: { name: 'Soft City Air', file: '/sounds/market.mp3' },
-  community: { name: 'Communal Glow', file: '/sounds/community.mp3' },
-  codex: { name: 'Ancient Pages', file: '/sounds/codex.mp3' }
-};
+const SoundContext = createContext<SoundContextType | undefined>(undefined);
 
-type SoundContextType = {
-  playing: boolean;
-  volume: number;
-  current: string | null;
-  play: (id: string) => void;
-  stop: () => void;
-  setVolume: (v: number) => void;
-};
+export function SoundProvider({ children }: { children: ReactNode }) {
+  const [enabled, setEnabled] = useState(true);
 
-const SoundContext = createContext<SoundContextType | null>(null);
+  const toggle = () => setEnabled((v) => !v);
 
-export const SoundProvider = ({ children }: { children: React.ReactNode }) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [volume, setVolumeState] = useState(0.4);
-  const [current, setCurrent] = useState<string | null>(null);
+  const play = (kind: "tap" | "enter" = "tap") => {
+    // no sound if disabled or not in browser
+    if (!enabled) return;
+    if (typeof window === "undefined") return;
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+    const AudioCtx =
+      (window as any).AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
 
-    const savedVol = window.localStorage.getItem('sound-volume');
-    if (savedVol) setVolumeState(parseFloat(savedVol));
-  }, []);
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-  const setVolume = (v: number) => {
-    setVolumeState(v);
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('sound-volume', v.toString());
-    }
-    if (audioRef.current) audioRef.current.volume = v;
+    osc.type = "sine";
+    osc.frequency.value = kind === "tap" ? 440 : 660;
+    gain.gain.value = 0.25;
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.08);
   };
 
-  const play = (id: string) => {
-    const sound = defaultSoundscapes[id];
-    if (!sound) return;
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-
-    const audio = new Audio(sound.file);
-
-    audio.loop = true;
-    audio.volume = volume;
-
-    audio.play();
-
-    audioRef.current = audio;
-    setPlaying(true);
-    setCurrent(id);
-  };
-
-  const stop = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    setPlaying(false);
-    setCurrent(null);
-  };
+  const value: SoundContextType = { enabled, toggle, play };
 
   return (
-    <SoundContext.Provider value={{ playing, volume, current, play, stop, setVolume }}>
-      {children}
-    </SoundContext.Provider>
+    <SoundContext.Provider value={value}>{children}</SoundContext.Provider>
   );
-};
+}
 
-export const useSound = () => {
+export function useSound(): SoundContextType {
   const ctx = useContext(SoundContext);
-  if (!ctx) throw new Error('useSound must be inside SoundProvider');
+  if (!ctx) {
+    throw new Error("useSound must be used within a SoundProvider");
+  }
   return ctx;
-};
+}
