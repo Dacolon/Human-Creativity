@@ -1,9 +1,11 @@
+/* app/globals.css */
+
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* ---------- Fonts ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Space+Grotesk:wght@400;500;600&display=swap');
 
 /* ---------- Base theme ---------- */
 
@@ -21,272 +23,78 @@ body {
   padding: 0;
 }
 
+/* Body text: clean but futuristic */
 body {
-  @apply text-slate-50;
-  font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
-    "SF Pro Text", ui-sans-serif, "Segoe UI", sans-serif;
-  background: #020617;
   min-height: 100vh;
+  background-color: #020617;
+  color: #e5e7eb;
+  font-family: "Rajdhani", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   position: relative;
   overflow-x: hidden;
 }
 
-/* headings / logo text */
+/* Header / logo font – sci-fi, not super blocky */
 .font-space {
   font-family: "Orbitron", system-ui, sans-serif;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
-/* Tailwind container tweak */
-.container {
-  @apply max-w-4xl mx-auto px-4;
-}
+/* ---------- Cosmic background layers ---------- */
 
-/* ---------- Cosmic Motion Engine layers ---------- */
-
-/*
-  Layer 1: big nebulas + faint color glow
-*/
+/* Base gradient sky */
 .bg-anim {
   position: fixed;
-  inset: -30%;
+  inset: 0;
   z-index: -3;
+  pointer-events: none;
   background:
-    radial-gradient(circle at 10% 5%, rgba(56, 189, 248, 0.55), transparent 65%),
-    radial-gradient(circle at 90% 15%, rgba(244, 114, 182, 0.45), transparent 70%),
-    radial-gradient(circle at 15% 80%, rgba(96, 165, 250, 0.4), transparent 65%),
-    radial-gradient(circle at 80% 80%, rgba(129, 140, 248, 0.4), transparent 70%),
-    radial-gradient(circle at 50% 60%, rgba(15, 23, 42, 0.98), #020617 55%);
-  filter: saturate(1.1);
-  animation: bgShift 45s ease-in-out infinite alternate;
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.26), transparent 55%),
+    radial-gradient(circle at 85% 10%, rgba(244, 114, 182, 0.22), transparent 55%),
+    radial-gradient(circle at 15% 80%, rgba(129, 140, 248, 0.24), transparent 60%),
+    linear-gradient(180deg, #020617 0%, #00010a 100%);
+  background-attachment: fixed;
 }
 
-/*
-  Layer 2: starfield (bright, obvious)
-*/
-.cosmic-noise {
+/* Starfield */
+.cosmic-depth {
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
+  opacity: 0.55;
   background-image:
-    radial-gradient(1px 1px at 5% 10%, rgba(255, 255, 255, 0.9), transparent),
-    radial-gradient(1px 1px at 15% 30%, rgba(226, 232, 240, 0.9), transparent),
-    radial-gradient(1px 1px at 25% 70%, rgba(248, 250, 252, 0.9), transparent),
-    radial-gradient(1px 1px at 40% 20%, rgba(248, 250, 252, 0.9), transparent),
-    radial-gradient(1px 1px at 55% 50%, rgba(248, 250, 252, 0.9), transparent),
-    radial-gradient(1px 1px at 70% 80%, rgba(248, 250, 252, 0.9), transparent),
-    radial-gradient(1px 1px at 85% 40%, rgba(248, 250, 252, 0.9), transparent),
-    radial-gradient(1px 1px at 95% 15%, rgba(248, 250, 252, 0.9), transparent),
-    radial-gradient(2px 2px at 20% 50%, rgba(251, 191, 36, 0.8), transparent),
-    radial-gradient(2px 2px at 80% 30%, rgba(96, 165, 250, 0.75), transparent),
-    radial-gradient(2px 2px at 60% 15%, rgba(244, 114, 182, 0.75), transparent);
-  background-size: 210px 210px;
-  mix-blend-mode: screen;
-  opacity: 0.9;
-  animation:
-    starDrift 90s linear infinite,
-    twinkle 4s ease-in-out infinite alternate;
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.65) 1px, transparent 2px),
+    radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.55) 1px, transparent 2px),
+    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.45) 1px, transparent 2px),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.5) 1px, transparent 2px);
+  background-size: 220px 220px, 260px 260px, 240px 240px, 280px 280px;
+  animation: starDrift 60s linear infinite;
 }
 
-/*
-  Layer 3: depth + "planets" / horizon
-*/
-.cosmic-depth {
+/* Soft cosmic glow / haze */
+.cosmic-noise {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.28;
   background:
-    /* big planet bottom-left */
-    radial-gradient(circle at -10% 120%, rgba(15, 23, 42, 0.2) 0, rgba(37, 99, 235, 0.6) 20%, transparent 55%),
-    /* smaller planet top-right */
-    radial-gradient(circle at 110% -20%, rgba(15, 23, 42, 0.2) 0, rgba(244, 114, 182, 0.55) 18%, transparent 50%),
-    /* distant horizon curve */
-    radial-gradient(circle at 50% 130%, rgba(15, 23, 42, 0) 0, rgba(15, 23, 42, 0.9) 36%, #020617 65%);
-  opacity: 0.95;
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.18), transparent 65%),
+    radial-gradient(circle at 5% 100%, rgba(56, 189, 248, 0.16), transparent 60%),
+    radial-gradient(circle at 95% 100%, rgba(244, 114, 182, 0.18), transparent 60%);
+  filter: blur(3px);
 }
 
-/* ---------- Splash screen ---------- */
-
-.splash-bg {
-  @apply min-h-screen flex items-center justify-center;
-  background:
-    radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.4), transparent 65%),
-    radial-gradient(circle at 90% 0%, rgba(244, 114, 182, 0.4), transparent 70%),
-    radial-gradient(circle at 50% 100%, rgba(129, 140, 248, 0.45), transparent 70%),
-    radial-gradient(circle at 0% 85%, rgba(15, 23, 42, 0.98), #020617 70%);
-  position: relative;
-  overflow: hidden;
-}
-
-.splash-title {
-  @apply text-[0.7rem] tracking-[0.32em] uppercase text-slate-300/90;
-  letter-spacing: 0.32em;
-  font-family: "Orbitron", system-ui, sans-serif;
-}
-
-/* ---------- Typography accents ---------- */
-
-.header-accent {
-  background-image: linear-gradient(
-    120deg,
-    #e5e7eb,
-    #a5b4fc,
-    #f9a8d4,
-    #22c55e,
-    #38bdf8
-  );
-  background-size: 220% 220%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: headerGlow 18s ease-in-out infinite alternate;
-}
-
-/* ---------- Floating glass panels / cards ---------- */
-
-.card {
-  @apply rounded-3xl border border-slate-800/90 bg-slate-950/65 p-4 md:p-5;
-  box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 0.95),
-    0 28px 70px rgba(2, 6, 23, 0.98);
-  backdrop-filter: blur(26px);
-}
-
-/* reusable “floating” helpers */
-.float-slow {
-  animation: floatSlow 11s ease-in-out infinite;
-}
-
-.float-slower {
-  animation: floatSlow 15s ease-in-out infinite;
-}
-
-.float-delay {
-  animation: floatSlow 13s ease-in-out infinite;
-  animation-delay: 1.4s;
-}
-
-/* nav buttons */
-.nav-link {
-  @apply inline-flex items-center justify-center rounded-full px-4 py-2.5 text-xs md:text-sm font-medium border border-slate-800 bg-slate-950/80;
-  box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 0.95),
-    0 20px 48px rgba(2, 6, 23, 0.96);
-  backdrop-filter: blur(24px);
-  transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    box-shadow 230ms ease,
-    transform 160ms ease;
-}
-
-.nav-link:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 0 0 1px rgba(56, 189, 248, 0.8),
-    0 24px 55px rgba(8, 47, 73, 0.98);
-  background:
-    radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.45), transparent 55%),
-    rgba(15, 23, 42, 0.98);
-  border-color: rgba(56, 189, 248, 0.95);
-}
-
-/* space between stacked cards */
-main .card + .card {
-  margin-top: 1rem;
-}
-
-/* ---------- Utility tweaks ---------- */
-
-.cosmic-section-title {
-  @apply text-lg md:text-xl font-semibold text-slate-100;
-  font-family: "Orbitron", system-ui, sans-serif;
-}
-
-.cosmic-subtle {
-  @apply text-xs md:text-sm text-slate-300/85;
-}
-
-/* small screen padding */
-main {
-  padding-top: 0.5rem;
-}
-
-footer {
-  margin-top: 0.5rem;
-}
-
-/* smooth scroll */
-html {
-  scroll-behavior: smooth;
-}
-
-/* ---------- Keyframes ---------- */
-
-@keyframes bgShift {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1.04);
-  }
-  25% {
-    transform: translate3d(-1.5%, -1%, 0) scale(1.06);
-  }
-  50% {
-    transform: translate3d(1.5%, 2%, 0) scale(1.04);
-  }
-  75% {
-    transform: translate3d(-0.5%, 1.5%, 0) scale(1.06);
-  }
-  100% {
-    transform: translate3d(1%, -1%, 0) scale(1.05);
-  }
-}
-
+/* Star motion */
 @keyframes starDrift {
   0% {
-    background-position: 0 0;
-  }
-  50% {
-    background-position: -120px 90px;
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    background-position: -240px 160px;
-  }
-}
-
-@keyframes twinkle {
-  0% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.65;
-  }
-}
-
-@keyframes headerGlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes floatSlow {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-  100% {
-    transform: translateY(0px);
+    transform: translate3d(-80px, -60px, 0);
   }
 }
