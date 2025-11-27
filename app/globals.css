@@ -333,3 +333,12 @@ body {
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
+
+:root {
+  --font-oxanium: "Oxanium", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+body {
+  font-family: var(--font-oxanium);
+  }
