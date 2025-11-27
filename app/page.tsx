@@ -1,186 +1,173 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Compass, Clock, Sparkles, PenTool } from 'lucide-react';
-import Link from 'next/link';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const floatTransition = {
-  duration: 10,
-  repeat: Infinity,
-  repeatType: 'reverse' as const,
-  ease: 'easeInOut' as const
-};
+const REALMS = [
+  { href: "/", label: "Constellation" },
+  { href: "/flow", label: "Flow" },
+  { href: "/practice", label: "Practice" },
+  { href: "/archive", label: "Archive" },
+  { href: "/inner-studio", label: "Inner Studio" },
+  { href: "/journal", label: "Journal" },
+  { href: "/market", label: "Market" },
+  { href: "/sharing", label: "Sharing" },
+  { href: "/community", label: "Community" },
+  { href: "/creative-codex", label: "Creative Codex" },
+  { href: "/your-aura", label: "Your Aura" },
+];
+
+function RealmNavButton({
+  href,
+  label,
+}: {
+  href: string;
+  label: string;
+}) {
+  const pathname = usePathname() || "/";
+  const active = pathname === href;
+
+  return (
+    <Link
+      href={href}
+      className={[
+        "rounded-full px-5 py-2.5 text-sm font-medium tracking-wide transition-all",
+        "border border-white/5 shadow-sm",
+        "bg-slate-900/60 hover:bg-slate-900/80",
+        "backdrop-blur-md",
+        active
+          ? "ring-2 ring-cyan-300/80 text-cyan-50 shadow-[0_0_40px_rgba(34,211,238,0.5)]"
+          : "text-slate-200/85 hover:text-white",
+      ].join(" ")}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function CosmicCard({
+  title,
+  eyebrow,
+  children,
+  accent = "teal",
+}: {
+  title: string;
+  eyebrow: string;
+  children: React.ReactNode;
+  accent?: "teal" | "violet";
+}) {
+  const accentStyles =
+    accent === "teal"
+      ? "from-cyan-500/20 via-slate-900/95 to-emerald-500/10"
+      : "from-fuchsia-500/20 via-slate-900/95 to-violet-500/15";
+
+  return (
+    <section
+      className={[
+        "relative overflow-hidden rounded-3xl border border-white/8",
+        "bg-gradient-to-br",
+        accentStyles,
+        "shadow-[0_30px_80px_rgba(15,23,42,0.95)]",
+        "backdrop-blur-2xl px-6 py-6 sm:px-8 sm:py-7",
+        "mt-6",
+      ].join(" ")}
+    >
+      <div className="absolute -right-16 -top-24 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
+      <div className="absolute -left-10 -bottom-24 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
+
+      <p className="text-[11px] font-semibold tracking-[0.3em] text-sky-200/80 uppercase">
+        {eyebrow}
+      </p>
+      <h2 className="mt-1 text-2xl sm:text-3xl font-semibold tracking-[0.14em] text-slate-50">
+        {title}
+      </h2>
+
+      <div className="mt-4 text-[15px] leading-relaxed text-slate-100/90">
+        {children}
+      </div>
+    </section>
+  );
+}
 
 export default function HomePage() {
   return (
-    <div className="space-y-5 pb-4">
-      {/* Row 1: Today in your universe */}
-      <motion.section
-        className="card float-slow"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-      >
-        <div className="flex items-center gap-3 mb-3">
-          <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-500/20 border border-cyan-400/60">
-            <Sparkles size={16} className="text-cyan-300" />
-          </div>
-          <h2 className="cosmic-section-title font-space">
-            Today in your universe
-          </h2>
-        </div>
-        <p className="cosmic-subtle mb-4">
-          Pick one tiny action to keep your creative orbit moving. No pressure,
-          no perfection — just momentum.
+    <main className="relative">
+      {/* Header */}
+      <header className="pb-6">
+        <p className="text-[11px] font-semibold tracking-[0.3em] text-sky-100/90 uppercase mb-3">
+          COSMIC STUDIO
         </p>
 
-        <div className="grid gap-3 md:grid-cols-3">
-          <div className="rounded-2xl bg-slate-900/70 border border-slate-700/70 p-3">
-            <p className="text-[0.7rem] uppercase tracking-wide text-slate-400 mb-1">
+        <h1 className="text-3xl sm:text-4xl md:text-[2.8rem] leading-tight font-semibold tracking-tight text-slate-50">
+          Human Creativity
+          <br />
+          Universe
+        </h1>
+
+        <p className="mt-3 max-w-xl text-sm sm:text-[15px] leading-relaxed text-slate-100/90">
+          A cosmic operating system for your creative life — mind, body,
+          spirit, and practice held together in one living world.
+        </p>
+
+        {/* Aura pill */}
+        <div className="mt-5 inline-flex items-center rounded-full bg-gradient-to-r from-orange-500 to-rose-500 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(251,113,133,0.6)]">
+          <span className="mr-2 text-lg">🔥</span>
+          <span>David Ariel Colon</span>
+          <span className="ml-2 text-xs font-normal text-orange-50/90">
+            FIRE aura
+          </span>
+        </div>
+      </header>
+
+      {/* Realm nav */}
+      <nav className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {REALMS.map((realm) => (
+          <RealmNavButton
+            key={realm.href}
+            href={realm.href}
+            label={realm.label}
+          />
+        ))}
+      </nav>
+
+      {/* Cards */}
+      <CosmicCard eyebrow="TODAY IN YOUR UNIVERSE" title="Today in your universe">
+        <p>
+          Pick one tiny action to keep your creative orbit moving. No
+          pressure, no perfection — just momentum.
+        </p>
+        <div className="mt-4 space-y-3 text-sm">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.18em] text-slate-300/90 uppercase">
               10-minute ritual
             </p>
-            <p className="text-sm text-slate-50">
+            <p className="mt-1 text-slate-50/95">
               Put your phone on airplane mode and fill a page with marks:
               circles, lines, dots — no images, just movement.
             </p>
           </div>
-          <div className="rounded-2xl bg-slate-900/70 border border-slate-700/70 p-3">
-            <p className="text-[0.7rem] uppercase tracking-wide text-slate-400 mb-1">
-              Reflection
-            </p>
-            <p className="text-sm text-slate-50">
-              What feeling are you secretly making art about today, even if you
-              don&apos;t say it out loud?
-            </p>
-          </div>
-          <div className="rounded-2xl bg-slate-900/70 border border-slate-700/70 p-3">
-            <p className="text-[0.7rem] uppercase tracking-wide text-slate-400 mb-1">
-              Micro-commitment
-            </p>
-            <p className="text-sm text-slate-50">
-              Choose one realm — <span className="font-semibold">Flow</span>,{' '}
-              <span className="font-semibold">Practice</span>, or{' '}
-              <span className="font-semibold">Journal</span> — and promise
-              yourself just 5 focused minutes inside it.
-            </p>
-          </div>
         </div>
-      </motion.section>
+      </CosmicCard>
 
-      {/* Row 2: Quick portals into other realms */}
-      <motion.section
-        className="card float-delay"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut', delay: 0.05 }}
+      <CosmicCard
+        eyebrow="FLOW LAB"
+        title="Creative warmup"
+        accent="violet"
       >
-        <div className="flex items-center gap-3 mb-3">
-          <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/25 border border-indigo-400/60">
-            <Compass size={16} className="text-indigo-200" />
+        <p>Draw 10 circles and turn each into something new.</p>
+        <div className="mt-5 flex items-center gap-3 flex-wrap">
+          <button
+            className="rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(217,70,239,0.7)]"
+            type="button"
+          >
+            New warmup
+          </button>
+          <div className="inline-flex items-center rounded-full border border-white/10 bg-slate-900/60 px-3 py-1.5 text-xs text-slate-100/90">
+            <span className="mr-2 h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            00:00
           </div>
-          <h2 className="cosmic-section-title font-space">
-            Portals you can step through now
-          </h2>
         </div>
-        <p className="cosmic-subtle mb-4">
-          Each realm is a different kind of space: practice, reflection,
-          history, community. Tap one to drift deeper.
-        </p>
-
-        <div className="grid gap-3 md:grid-cols-2">
-          <FloatingPortalCard
-            href="/flow"
-            title="Flow Realm"
-            tag="Warm-up & constraints"
-            description="Spin up random constraints, warmups, and prompts designed to get your hands moving before your brain can overthink."
-          />
-          <FloatingPortalCard
-            href="/wellbeing"
-            title="Inner Studio"
-            tag="Mind, body, spirit"
-            description="Short check-ins, grounding practices, and reminders that your nervous system is part of your creative toolkit."
-          />
-          <FloatingPortalCard
-            href="/museum"
-            title="Archive & Art History"
-            tag="Lineage & influence"
-            description="Reflect on art you love, understand why it hits you, and place your own work inside a much bigger human story."
-          />
-          <FloatingPortalCard
-            href="/community"
-            title="Community Realm"
-            tag="Future social space"
-            description="A future home for other humans building their creative life. For now, a reminder: you are not doing this alone."
-          />
-        </div>
-      </motion.section>
-
-      {/* Row 3: Journal invite */}
-      <motion.section
-        className="card float-slower"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-      >
-        <div className="flex items-center gap-3 mb-3">
-          <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-400/60">
-            <PenTool size={16} className="text-emerald-200" />
-          </div>
-          <h2 className="cosmic-section-title font-space">
-            A quiet orbit for your thoughts
-          </h2>
-        </div>
-        <p className="cosmic-subtle mb-4">
-          This universe isn&apos;t about output for social media. It&apos;s about
-          you having a private, honest place to talk to yourself as an artist.
-        </p>
-
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <p className="text-sm text-slate-50 md:max-w-md">
-            Open the <span className="font-semibold">Journal Realm</span> and
-            write for three minutes about what you&apos;re really trying to say
-            with your work right now. No polishing, no audience, no algorithm.
-          </p>
-          <Link href="/journal" className="md:shrink-0">
-            <button className="inline-flex items-center gap-2 rounded-full bg-emerald-500/90 hover:bg-emerald-400 text-slate-950 font-semibold text-sm px-4 py-2.5 shadow-[0_16px_40px_rgba(16,185,129,0.5)] transition-transform hover:-translate-y-[1px]">
-              <Clock size={16} />
-              Enter Journal Realm
-            </button>
-          </Link>
-        </div>
-      </motion.section>
-    </div>
-  );
-}
-
-function FloatingPortalCard(props: {
-  href: string;
-  title: string;
-  tag: string;
-  description: string;
-}) {
-  const { href, title, tag, description } = props;
-
-  return (
-    <motion.div
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: 'spring', stiffness: 220, damping: 20 }}
-      className="rounded-2xl bg-slate-900/80 border border-slate-700/75 p-3 flex flex-col justify-between"
-    >
-      <div>
-        <p className="text-[0.65rem] uppercase tracking-[0.18em] text-slate-400 mb-1">
-          {tag}
-        </p>
-        <h3 className="text-sm font-space text-slate-50 mb-1">{title}</h3>
-        <p className="text-[0.8rem] text-slate-300">{description}</p>
-      </div>
-      <div className="mt-3">
-        <Link href={href}>
-          <span className="inline-flex items-center gap-1 text-[0.75rem] font-medium text-cyan-300 hover:text-cyan-200">
-            Enter portal
-          </span>
-        </Link>
-      </div>
-    </motion.div>
+      </CosmicCard>
+    </main>
   );
 }
